@@ -20,7 +20,8 @@ auth_service = AuthService()
                     'properties': {
                         'username': {'type': 'string', 'example': 'newuser'},
                         'email': {'type': 'string', 'example': 'newuser@example.com'},
-                        'password': {'type': 'string', 'example': 'strongpassword'}
+                        'password': {'type': 'string', 'example': 'strongpassword'},
+                        'role': {'type': 'string', 'example': 'operator', 'description': "Optional. Defaults to 'operator'. Attempting to set 'supervisor' via this endpoint is not allowed and will result in an error. Use 'operator' if specifying a role."}
                     },
                     'required': ['username', 'email', 'password']
                 }
