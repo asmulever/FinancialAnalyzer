@@ -1,0 +1,33 @@
+﻿# Ignorar carpetas de caché de Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Entornos virtuales
+.env/
+.venv/
+venv/
+ENV/
+env/
+
+# Archivos de configuración de entorno
+.env
+*.env
+
+# Archivos de bases de datos comunes
+*.sqlite3
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+*.swp
+
+# Archivos de sistemas operativos
+.DS_Store
+Thumbs.db
+
+# Archivos de configuración de editores
+.vscode/
+.idea/
+*.sublime-p*
