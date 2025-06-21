@@ -2,16 +2,18 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_jwt_extended import JWTManager
 from flasgger import Swagger
-from flask_migrate import Migrate # New import for Flask-Migrate
+from flask_migrate import Migrate
 from app.config.config import Config
 
 db = SQLAlchemy()
 jwt = JWTManager()
 swagger = Swagger()
-migrate = Migrate() # New Migrate instance
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
+
+    # ─── Configuración ─────────────────────────────────────────────────────────
     app.config.from_object(Config)
     app.config['JWT_SECRET_KEY'] = app.config.get('SECRET_KEY')
     app.config['SWAGGER'] = {
@@ -19,7 +21,6 @@ def create_app():
         'uiversion': 3,
         'openapi': '3.0.2',
         'description': 'API for managing financial portfolios, analyzing instruments, and getting suggestions.',
-        'termsOfService': None,
         'contact': {
             'name': 'API Support',
             'email': 'support@example.com'
@@ -40,13 +41,16 @@ def create_app():
         'security': [{'BearerAuth': []}]
     }
 
+    # ─── Inicialización de extensiones ────────────────────────────────────────
     db.init_app(app)
     jwt.init_app(app)
     swagger.init_app(app)
-    migrate.init_app(app, db) # Initialize Migrate
+    migrate.init_app(app, db)
 
-    from app.models import models # Ensure models are imported for db.create_all() and migrations
+    # ─── Importar modelos (necesario para migraciones) ────────────────────────
+    from app.models import models
 
+    # ─── Registro de Blueprints ───────────────────────────────────────────────
     from app.controllers.auth_controller import auth_bp
     app.register_blueprint(auth_bp)
 
@@ -56,14 +60,17 @@ def create_app():
     from app.controllers.portfolio_controller import portfolio_bp
     app.register_blueprint(portfolio_bp)
 
+    # ─── Base de datos inicial (solo para SQLite) ─────────────────────────────
     with app.app_context():
-        # db.create_all() # We'll let Flask-Migrate handle table creation from now on, or use it for initial setup.
-        # For the very first run without existing migrations, db.create_all() can be useful.
-        # However, once Flask-Migrate is in use, 'flask db upgrade' is the standard way.
-        # For now, let's assume db.create_all() has done its job or will be run manually once if needed.
-        # If you run 'flask db init', then 'flask db migrate', then 'flask db upgrade', create_all() is not strictly needed here.
-        # To be safe for now and ensure tables exist for current execution without manual migration steps:
-        if app.config.get('SQLALCHEMY_DATABASE_URI').startswith('sqlite'): # Avoid running create_all if not sqlite for safety in other DBs
-             db.create_all()
+        if app.config.get('SQLALCHEMY_DATABASE_URI', '').startswith('sqlite'):
+            db.create_all()
+
+    # ─── Ruta raíz por defecto ────────────────────────────────────────────────
+    @app.route('/')
+    def index():
+        return {
+            'status': 'ok',
+            'message': 'Financial API está en ejecución'
+        }
 
     return app
