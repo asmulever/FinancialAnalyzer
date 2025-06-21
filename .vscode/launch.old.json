@@ -1,61 +1,31 @@
 {
-
   "version": "0.2.0",
-
   "configurations": [
-
     {
-
       "name": "Flask App",
-
       "type": "debugpy",
-
       "request": "launch",
-
       "program": "${workspaceFolder}/run.py",
-
       "console": "integratedTerminal",
-
       "env": {
-
         "FLASK_APP": "app",
-
         "FLASK_ENV": "development"
-
       }
-
     },
-
     {
       "name": "Launch React App",
-
       "type": "pwa-node",
-
       "request": "launch",      
-
       "cwd": "${workspaceFolder}/frontend",
-
       "runtimeExecutable": "npm",
-
       "runtimeArgs": ["start"],
-
       "console": "integratedTerminal"
-
     }
-
   ],
-
   "compounds": [
-
     {
-
       "name": "Run Full Stack",
-
       "configurations": ["Flask App", "Launch React App"]
-
     }
-
   ]
-
 }
-
